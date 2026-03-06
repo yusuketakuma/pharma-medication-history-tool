@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>薬歴テンプレート生成 | 薬剤師向け無料ツール</title>
+  <meta name="description" content="薬剤師が薬歴作成を効率化するための無料テンプレート生成ツール。患者情報と処方内容を入力するだけで、標準的な薬歴フォーマットを自動生成します。">
+  <meta property="og:title" content="薬歴テンプレート生成 | 薬剤師向け無料ツール">
+  <meta property="og:description" content="薬歴作成を効率化。入力するだけで標準フォーマットを自動生成。">
+  <meta property="og:type" content="website">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Sans', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      margin-bottom: 30px;
+      border-radius: 16px;
+    }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    .subtitle { opacity: 0.9; font-size: 14px; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #11998e;
+      border-bottom: 2px solid #11998e;
+      padding-bottom: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #11998e;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .row { grid-template-columns: 1fr; }
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(17, 153, 142, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .output {
+      background: #f8f9fa;
+      border: 2px dashed #11998e;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      min-height: 200px;
+    }
+    .copy-btn {
+      margin-top: 12px;
+      background: #6c757d;
+    }
+    .copy-btn:hover {
+      box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+    }
+    .template-select {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .template-btn {
+      padding: 8px 16px;
+      background: #e9ecef;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: auto;
+    }
+    .template-btn:hover {
+      background: #11998e;
+      color: white;
+    }
+    .template-btn.active {
+      background: #11998e;
+      color: white;
+    }
+    .cta {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 30px;
+    }
+    .cta h3 { margin-bottom: 8px; }
+    .cta p { opacity: 0.9; margin-bottom: 16px; font-size: 14px; }
+    .cta a {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 4px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+    .success-msg {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 12px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>💊 薬歴テンプレート生成</h1>
+      <p class="subtitle">入力するだけで標準フォーマットを自動生成</p>
+    </header>
+
+    <div class="card">
+      <h2>📋 テンプレート選択</h2>
+      <div class="template-select">
+        <button class="template-btn active" data-template="standard">標準</button>
+        <button class="template-btn" data-template="homecare">在宅</button>
+        <button class="template-btn" data-template="chronic">慢性疾患</button>
+        <button class="template-btn" data-template="antibiotic">抗生物質</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>👤 患者情報</h2>
+      <div class="row">
+        <div class="form-group">
+          <label>患者イニシャル</label>
+          <input type="text" id="patientInitial" placeholder="A.T." maxlength="10">
+        </div>
+        <div class="form-group">
+          <label>年齢</label>
+          <input type="number" id="age" placeholder="75" min="0" max="120">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>性別</label>
+          <select id="gender">
+            <option value="">選択</option>
+            <option value="男性">男性</option>
+            <option value="女性">女性</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>基礎疾患</label>
+          <input type="text" id="disease" placeholder="高血圧、糖尿病">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💊 処方内容</h2>
+      <div class="form-group">
+        <label>処方薬</label>
+        <textarea id="medication" placeholder="アムロジピン 5mg 1T 1×朝食後&#10;メトホルミン 500mg 1T 2×朝夕食後"></textarea>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>処方期間</label>
+          <select id="duration">
+            <option value="14日">14日</option>
+            <option value="28日">28日</option>
+            <option value="30日">30日</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>処方区分</label>
+          <select id="rxType">
+            <option value="新規">新規</option>
+            <option value="継続">継続</option>
+            <option value="変更">変更</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📝 薬剤師業務</h2>
+      <div class="form-group">
+        <label>服薬指導内容</label>
+        <textarea id="counseling" placeholder="血圧測定の重要性について説明&#10;副作用（浮腫、頭痛）の説明"></textarea>
+      </div>
+      <div class="form-group">
+        <label>患者理解度・反応</label>
+        <textarea id="patientResponse" placeholder="理解良好、質問なし"></textarea>
+      </div>
+      <div class="form-group">
+        <label>課題・フォロー点</label>
+        <textarea id="followUp" placeholder="次回血圧持参確認"></textarea>
+      </div>
+    </div>
+
+    <button onclick="generateTemplate()">📄 薬歴を生成</button>
+
+    <div class="card" id="outputCard" style="display: none;">
+      <h2>📋 生成された薬歴</h2>
+      <div class="output" id="output"></div>
+      <button class="copy-btn" onclick="copyToClipboard()">📋 コピー</button>
+      <div class="success-msg" id="successMsg">コピーしました！</div>
+    </div>
+
+    <div class="cta">
+      <h3>🚀 もっと効率化しませんか？</h3>
+      <p>薬歴作成をAIで自動化するプロンプト集も好評販売中</p>
+      <a href="#">AIプロンプト集を見る</a>
+      <a href="#">Notionテンプレート</a>
+    </div>
+
+    <footer>
+      <p>薬剤師 × エンジニア個人開発 | <a href="#">利用規約</a> | データは端末内のみ保存</p>
+    </footer>
+  </div>
+
+  <script>
+    // テンプレート定義
+    const templates = {
+      standard: {
+        name: '標準',
+        format: (data) => `【薬歴】${data.date}
+━━━━━━━━━━━━━━━━━━━━━━
+◆患者情報
+  ${data.initial}（${data.age}歳 ${data.gender}）
+  基礎疾患: ${data.disease}
+
+◆処方内容（${data.rxType}・${data.duration}）
+${data.medication}
+
+◆服薬指導
+${data.counseling}
+
+◆患者反応
+${data.response}
+
+◆課題・フォロー
+${data.followUp}
+━━━━━━━━━━━━━━━━━━━━━━`
+      },
+      homecare: {
+        name: '在宅',
+        format: (data) => `【在宅薬剤管理指導】${data.date}
+━━━━━━━━━━━━━━━━━━━━━━
+◆患者
+  ${data.initial}（${data.age}歳 ${data.gender}）
+  基礎疾患: ${data.disease}
+
+◆処方（${data.rxType}・${data.duration}）
+${data.medication}
+
+◆訪問時状況
+  バイタル: 
+  ADL: 
+  服薬状況: 
+
+◆指導内容
+${data.counseling}
+
+◆家族・介護者への説明
+  
+
+◆評価・今後の課題
+${data.followUp}
+━━━━━━━━━━━━━━━━━━━━━━`
+      },
+      chronic: {
+        name: '慢性疾患',
+        format: (data) => `【慢性疾患管理】${data.date}
+━━━━━━━━━━━━━━━━━━━━━━
+◆患者: ${data.initial}（${data.age}歳 ${data.gender}）
+◆疾患: ${data.disease}
+
+◆現在の治療（${data.rxType}）
+${data.medication}
+
+◆指標確認
+  血圧: / mmHg
+  HbA1c: %
+  その他: 
+
+◆服薬アドヒアランス
+  ${data.response}
+
+◆指導内容
+${data.counseling}
+
+◆次回目標
+${data.followUp}
+━━━━━━━━━━━━━━━━━━━━━━`
+      },
+      antibiotic: {
+        name: '抗生物質',
+        format: (data) => `【抗生物質処方】${data.date}
+━━━━━━━━━━━━━━━━━━━━━━
+◆患者: ${data.initial}（${data.age}歳 ${data.gender}）
+
+◆処方（${data.duration}）
+${data.medication}
+
+◆感染症の疑い
+  
+
+◆服薬指導
+  ✓ 決められた期間内服完了の重要性
+  ✓ 自己判断での中止禁止
+  ${data.counseling}
+
+◆副作用説明
+  ✓ 下痢、胃部不快感の可能性
+  ✓ 発疹・瘙痒時は速やかに受診
+
+◆患者理解: ${data.response}
+━━━━━━━━━━━━━━━━━━━━━━`
+      }
+    };
+
+    let currentTemplate = 'standard';
+
+    // テンプレート切り替え
+    document.querySelectorAll('.template-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentTemplate = this.dataset.template;
+      });
+    });
+
+    function generateTemplate() {
+      const data = {
+        date: new Date().toLocaleDateString('ja-JP'),
+        initial: document.getElementById('patientInitial').value || '___',
+        age: document.getElementById('age').value || '___',
+        gender: document.getElementById('gender').value || '___',
+        disease: document.getElementById('disease').value || 'なし',
+        medication: document.getElementById('medication').value || '（未入力）',
+        duration: document.getElementById('duration').value,
+        rxType: document.getElementById('rxType').value,
+        counseling: document.getElementById('counseling').value || '（特になし）',
+        response: document.getElementById('patientResponse').value || '良好',
+        followUp: document.getElementById('followUp').value || '（特になし）'
+      };
+
+      const output = templates[currentTemplate].format(data);
+      document.getElementById('output').textContent = output;
+      document.getElementById('outputCard').style.display = 'block';
+      document.getElementById('successMsg').style.display = 'none';
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById('successMsg');
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
